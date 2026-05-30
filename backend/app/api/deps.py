@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
 from app.db.session import AsyncSessionLocal
+from app.services.ingestion.pipeline import IngestionPipeline
 from app.services.retrieval.embedder import GeminiEmbedder
 from app.services.retrieval.vector_store import QdrantVectorStore
 
@@ -25,4 +26,12 @@ def get_vector_store() -> QdrantVectorStore:
         url=settings.QDRANT_URL,
         api_key=settings.QDRANT_API_KEY,
         collection_name=settings.QDRANT_COLLECTION,
+    )
+
+
+@lru_cache(maxsize=1)
+def get_pipeline() -> IngestionPipeline:
+    return IngestionPipeline(
+        embedder=get_embedder(),
+        vector_store=get_vector_store(),
     )
