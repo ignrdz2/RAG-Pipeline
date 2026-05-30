@@ -9,6 +9,7 @@ class Chunk:
     page_number: int | None
     start_char: int
     end_char: int
+    filename: str = ""
 
 
 def _token_count(text: str) -> int:
